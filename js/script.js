@@ -26,15 +26,12 @@ function addGo(e) {
    e.target.append(goDisplay)
    go = go === "circle" ? "cross" : "circle"
    infoDisplay.textContent = "It is now " + go + "'s go."
-   e.target.removeEventlistener("click, addGo")
+   e.target.removeEventListener("click", addGo)
    checkScore()
 }
 
 function checkScore() {
     const allSquares = document.querySelectorAll(".square")
-
-
-
     const winningCombos = [
         [0,1,2], [3,4,5], [6,7,8],
         [0,3,6], [1,4,7], [2,5,8],
