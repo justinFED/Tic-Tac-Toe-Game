@@ -40,7 +40,7 @@ body {
     height: 90px;
     width: 90px;
     position: relative;
-    transform: rotate(45deg); /* to make the cross shape */
+    transform: rotate(45deg); /* Cross Shape */
 }
 
 .cross:before, .cross:after {
