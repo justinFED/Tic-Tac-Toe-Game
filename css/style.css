@@ -18,11 +18,12 @@ h1 {
 }
 
 #gameboard {
-    width: 300px;
-    height: 300px;
+    width: 420px;
+    height: 420px;
     background-color: black;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns of equal width */
+    grid-template-rows: repeat(3, 1fr); /* 3 rows of equal height */
     border: 15px solid #333;
     transition: .5s;
     border-radius: 10px;
@@ -34,8 +35,8 @@ h1 {
 }
 
 .square {
-    width: 100px;
-    height: 100px;
+    width: 100%;
+    height: 100%;
     background-color: #333;
     border: solid 4px #0ef;
     box-sizing: border-box;
@@ -66,13 +67,11 @@ h1 {
     transition: box-shadow 0 0 20px #FD1C03, inset 0 0 20px #FD1C03;
 }
 
-
 .cross:before, .cross:after {
     content: "";
     position: absolute;
     background-color: #FD1C03;
 }
-
 
 .cross:before {
     left: 50%;
@@ -81,7 +80,6 @@ h1 {
     height: 100%;
     box-shadow: 0 0 20px #FD1C03, inset 0 0 20px #FD1C03;
 }
-
 
 .cross:after {
     top: 50%;
