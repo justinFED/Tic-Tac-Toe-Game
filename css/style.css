@@ -8,13 +8,33 @@ body {
     align-items: center;
     height: 100vh;
     flex-direction: column;
-    background-color: black;
+    background: #07252d;
 }
 
 h1 {
-    color: #0ef;
+    color: #0e3742;
+    margin: 0 0 70px 0;
     font-family: 'Press Start 2P', cursive;
     font-size: 3rem;
+    animation: animate 5s linear infinite;
+    -webkit-box-reflect: below 1px linear-gradient(transparent, #0008);
+}
+
+@keyframes animate {
+    0%,18%,20%,50.1%,60%,65.1%,80%,90.1%,92% {
+        color: #0e3742;
+        text-shadow: none;
+    }
+
+    18.1%,20.1%,30%,50%,60.1%,65%,80.1%,90%,92.1%,100% {
+        color: #fff;
+        text-shadow: 0 0 10px #03bcf4,
+        0 0 20px #03bcf4,
+        0 0 40px #03bcf4,
+        0 0 80px #03bcf4,
+        0 0 160px #03bcf4;
+
+    }
 }
 
 #gameboard {
@@ -91,7 +111,6 @@ h1 {
     box-shadow: 0 0 20px #FD1C03, inset 0 0 20px #FD1C03;
 }
 
-/* Additional CSS for the winning line */
 #line {
     position: absolute;
     top: 0;
@@ -99,5 +118,4 @@ h1 {
     width: 100%;
     height: 100%;
     pointer-events: none;
-
 }
