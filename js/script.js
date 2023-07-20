@@ -4,6 +4,8 @@ const startCells = [ "", "", "", "", "", "", "", "",""]
 
 let go = "circle"
 infoDisplay.textContent = "Circle goes first"
+infoDisplay.style.color = "white"
+
 
 
 function createBoard() {

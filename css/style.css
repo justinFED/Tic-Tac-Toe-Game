@@ -6,6 +6,7 @@ body {
     align-items: center;
     height: 100vh;
     flex-direction: column;
+    background-color: black;
 }
 
 #gameboard {
@@ -14,26 +15,40 @@ body {
     background-color: black;
     display: flex;
     flex-wrap: wrap;
-    border: solid 1px black;
+    border: 15px solid #333;
+    transition: .5s;
+    border-radius: 10px;
 }
+
+#gameboard:hover {
+    border: 15px solid #0ef;
+    box-shadow: 0 0 20px #0ef, inset 0 0 20px #0ef;
+}
+
 
 .square {
     width: 100px;
     height: 100px;
-    background-color: white;
-    border: solid 2px black;
+    background-color: #333;
+    border: solid 4px #0ef;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 2px;
 }
 
 .circle {
     height: 90px;
     width: 90px;
     border-radius: 50%;
-    border: 15px solid blue;
+    border: 15px solid #1F51FF;
     box-sizing: border-box;
+    transition: .3s;
+}
+
+.circle:hover {
+    box-shadow: 0 0 20px #1F51FF, inset 0 0 20px #1F51FF;
 }
 
 .cross {
@@ -41,24 +56,30 @@ body {
     width: 90px;
     position: relative;
     transform: rotate(45deg); /* Cross Shape */
+    transition: box-shadow 0 0 20px #FD1C03, inset 0 0 20px #FD1C03;
 }
+
 
 .cross:before, .cross:after {
     content: "";
     position: absolute;
-    background-color: red;
+    background-color: #FD1C03;
 }
+
 
 .cross:before {
     left: 50%;
     width: 30%;
     margin-left: -15%;
     height: 100%;
+    box-shadow: 0 0 20px #FD1C03, inset 0 0 20px #FD1C03;
 }
+
 
 .cross:after {
     top: 50%;
     height: 30%;
     margin-top: -15%;
     width: 100%;
+    box-shadow: 0 0 20px #FD1C03, inset 0 0 20px #FD1C03;
 }
