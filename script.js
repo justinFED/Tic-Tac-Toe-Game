@@ -8,8 +8,10 @@ let circleWins = 0;
 let crossWins = 0;
 let draws = 0;
 let go = "circle";
-infoDisplay.textContent = "Circle goes first";
-infoDisplay.style.color = "white";
+let moveIndex = -1;
+const moveHistory = [];
+infoDisplay.textContent = "Circle Goes First";
+infoDisplay.style.color = "black";
 
 if (localStorage.getItem("circleWins")) {
   circleWins = parseInt(localStorage.getItem("circleWins"));
@@ -22,11 +24,86 @@ if (localStorage.getItem("crossWins")) {
 if (localStorage.getItem("draws")) {
   draws = parseInt(localStorage.getItem("draws"));
 }
+function updateBoardFromHistory() {
+  const allSquares = document.querySelectorAll(".square");
+
+  allSquares.forEach(square => {
+    square.innerHTML = "";
+    square.removeEventListener("click", addGo);
+    square.addEventListener("click", addGo);
+  });
+
+  for (let i = 0; i <= moveIndex; i++) {
+    const move = moveHistory[i];
+    const cellElement = document.getElementById(move.cellIndex);
+    const goDisplay = document.createElement('div');
+    goDisplay.classList.add(move.go);
+    cellElement.appendChild(goDisplay);
+    cellElement.removeEventListener("click", addGo);
+  }
+
+  go = moveIndex === -1 ? "circle" : moveHistory[moveIndex].go === "circle" ? "cross" : "circle";
+  infoDisplay.textContent = "It is now " + go + "'s go.";
+}
+
+function next() {
+  if (moveIndex < moveHistory.length - 1) {
+    moveIndex++;
+    const move = moveHistory[moveIndex];
+    const cellElement = document.getElementById(move.cellIndex);
+    const goDisplay = document.createElement('div');
+    goDisplay.classList.add(move.go);
+    cellElement.appendChild(goDisplay);
+    go = move.go === "circle" ? "cross" : "circle";
+    infoDisplay.textContent = "It is now " + go + "'s go.";
+    cellElement.removeEventListener("click", addGo);
+    checkScore();
+} 
+}
+
+function previous() {
+  if (moveIndex > -1) {
+    moveIndex--;
+    updateBoardFromHistory();
+  }
+}
+
+function reset() {
+  const allSquares = document.querySelectorAll(".square");
+  allSquares.forEach(square => {
+    square.innerHTML = "";
+    square.addEventListener('click', addGo);
+  });
+
+  go = "circle";
+  infoDisplay.textContent = "Circle Goes First";
+
+  // Reset move history and move index
+  moveHistory.length = 0;
+  moveIndex = -1;
+
+  // Clear the line element
+  const lineElement = document.querySelector("#line");
+  lineElement.innerHTML = "";
+
+  // Reset scores and update scoreboard display
+  circleWins = 0;
+  crossWins = 0;
+  draws = 0;
+  circleScoreDisplay.textContent = `O: ${circleWins}`;
+  crossScoreDisplay.textContent = `X: ${crossWins}`;
+  drawScoreDisplay.textContent = `=: ${draws}`;
+
+  // Clear local storage
+  localStorage.removeItem("circleWins");
+  localStorage.removeItem("crossWins");
+  localStorage.removeItem("draws");
+}
 
 function createBoard() {
-  circleScoreDisplay.textContent = `Circle Wins: ${circleWins}`;
-  crossScoreDisplay.textContent = `Cross Wins: ${crossWins}`;
-  drawScoreDisplay.textContent = `Draws: ${draws}`;
+  circleScoreDisplay.textContent = `O: ${circleWins}`;
+  crossScoreDisplay.textContent = `X: ${crossWins}`;
+  drawScoreDisplay.textContent = `=: ${draws}`;
 
   startCells.forEach((_cell, index) => {
     const cellElement = document.createElement('div');
@@ -47,15 +124,24 @@ function addGo(e) {
   const goDisplay = document.createElement('div');
   goDisplay.classList.add(go);
   e.target.appendChild(goDisplay);
-  go = go === "circle" ? "cross" : "circle";
-  infoDisplay.textContent = "It is now " + go + "'s go.";
-  e.target.removeEventListener("click", addGo);
+
+  const move = {
+    cellIndex: e.target.id,
+    go: go
+  };
+  moveHistory.push(move);
+  moveIndex++;
+  updateBoardFromHistory();
   checkScore();
 
   localStorage.setItem("circleWins", circleWins);
   localStorage.setItem("crossWins", crossWins);
   localStorage.setItem("draws", draws);
 }
+
+document.getElementById("next").addEventListener("click", next);
+document.getElementById("previous").addEventListener("click", previous);
+document.getElementById("reset").addEventListener("click", reset);
 
 function checkScore() {
   const allSquares = document.querySelectorAll(".square");
@@ -105,7 +191,7 @@ function checkScore() {
     lineElement.setAttribute("y1", getCellCenterY(winningCombo[0]));
     lineElement.setAttribute("x2", getCellCenterX(winningCombo[2]));
     lineElement.setAttribute("y2", getCellCenterY(winningCombo[2]));
-    lineElement.setAttribute("stroke", "#0ef");
+    lineElement.setAttribute("stroke", "#000000");
     lineElement.setAttribute("stroke-width", "5");
     document.querySelector("#line").appendChild(lineElement);
 
@@ -115,9 +201,9 @@ function checkScore() {
     draws++;
   }
 
-  circleScoreDisplay.textContent = `Circle Wins: ${circleWins}`;
-  crossScoreDisplay.textContent = `Cross Wins: ${crossWins}`;
-  drawScoreDisplay.textContent = `Draws: ${draws}`;
+  circleScoreDisplay.textContent = `O: ${circleWins}`;
+  crossScoreDisplay.textContent = `X: ${crossWins}`;
+  drawScoreDisplay.textContent = `=: ${draws}`;
 }
 
 function isDraw() {

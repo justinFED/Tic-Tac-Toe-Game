@@ -7,19 +7,27 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>T I C T A C T O E</h1>
-
+    <div class="content">
+      <h2 class="text_shadows">tictactoe</h2>
+    </div>
+  
     <div id="gameboard"></div>
     <svg id="line"></svg>
 
     <p id="info"></p>
 
     <div id="scoreboard">
-      <p id="circle-score">Circle Wins: 0</p>
-      <p id="cross-score">Cross Wins: 0</p>
-      <p id="draw-score">Draws: 0</p>
+      <p id="circle-score">O:0</p>
+      <p id="cross-score">X:0</p>
+      <p id="draw-score">=:0</p>
     </div>
-
+    <div class="buttons">
+      <button id="previous"><</button>
+      <button id="next">></button>
+    </div>
+    <div class="resBtn">
+      <button id="reset">Reset</button>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>
