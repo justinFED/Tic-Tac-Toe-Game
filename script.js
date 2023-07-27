@@ -10,6 +10,7 @@ let draws = 0;
 let go = "circle";
 let moveIndex = -1;
 const moveHistory = [];
+let gameOver = false; 
 infoDisplay.textContent = "Circle Goes First";
 infoDisplay.style.color = "black";
 
@@ -47,28 +48,33 @@ function updateBoardFromHistory() {
 }
 
 function next() {
-  if (moveIndex < moveHistory.length - 1) {
-    moveIndex++;
-    const move = moveHistory[moveIndex];
-    const cellElement = document.getElementById(move.cellIndex);
-    const goDisplay = document.createElement('div');
-    goDisplay.classList.add(move.go);
-    cellElement.appendChild(goDisplay);
-    go = move.go === "circle" ? "cross" : "circle";
-    infoDisplay.textContent = "It is now " + go + "'s go.";
-    cellElement.removeEventListener("click", addGo);
-    checkScore();
+  if (gameOver || moveIndex >= moveHistory.length - 1) {
+    return;
+  }
+
+  moveIndex++;
+  const move = moveHistory[moveIndex];
+  const cellElement = document.getElementById(move.cellIndex);
+  const goDisplay = document.createElement('div');
+  goDisplay.classList.add(move.go);
+  cellElement.appendChild(goDisplay);
+  go = move.go === "circle" ? "cross" : "circle";
+  infoDisplay.textContent = "It is now " + go + "'s go.";
+  checkScore();
 } 
-}
+
 
 function previous() {
-  if (moveIndex > -1) {
-    moveIndex--;
-    updateBoardFromHistory();
+  if (gameOver || moveIndex <= -1) {
+    return;
   }
+
+  moveIndex--;
+  updateBoardFromHistory();
 }
 
 function reset() {
+
   const allSquares = document.querySelectorAll(".square");
   allSquares.forEach(square => {
     square.innerHTML = "";
@@ -196,9 +202,14 @@ function checkScore() {
     document.querySelector("#line").appendChild(lineElement);
 
     allSquares.forEach(square => square.removeEventListener("click", addGo));
+
+    gameOver = true; // Set gameOver flag to true
+    allSquares.forEach(square => square.removeEventListener("click", addGo));
+
   } else if (isDraw()) {
     infoDisplay.textContent = "It's a draw!";
     draws++;
+    gameOver = true;
   }
 
   circleScoreDisplay.textContent = `O: ${circleWins}`;
