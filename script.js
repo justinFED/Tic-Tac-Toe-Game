@@ -62,8 +62,13 @@ function next() {
   go = move.go === "circle" ? "cross" : "circle";
   infoDisplay.textContent = "It is now " + go + "'s go.";
   checkScore();
-}
 
+  if (moveIndex >= moveHistory.length - 1) {
+    document.getElementById("next").disabled = true;
+  }
+
+  document.getElementById("previous").disabled = false;
+}
 
 function previous() {
   if (moveIndex <= -1) {
@@ -72,27 +77,33 @@ function previous() {
 
   moveIndex--;
   updateBoardFromHistory();
+
+ 
+  if (moveIndex <= -1) {
+    document.getElementById("previous").disabled = true;
+  }
+
+  document.getElementById("next").disabled = false;
 }
 
 function reset() {
   const allSquares = document.querySelectorAll(".square");
   allSquares.forEach(square => {
     square.innerHTML = "";
-    square.addEventListener('click', addGo); // Reattach the click event listener
+    square.addEventListener('click', addGo);
   });
 
   go = "circle";
   infoDisplay.textContent = "Circle Goes First";
 
-  // Reset move history and move index
+  
   moveHistory.length = 0;
   moveIndex = -1;
 
-  // Clear the line element
+
   const lineElement = document.querySelector("#line");
   lineElement.innerHTML = "";
 
-  // Reset scores and update scoreboard display
   circleWins = 0;
   crossWins = 0;
   draws = 0;
@@ -100,12 +111,13 @@ function reset() {
   crossScoreDisplay.textContent = `X: ${crossWins}`;
   drawScoreDisplay.textContent = `=: ${draws}`;
 
-  // Clear local storage
   localStorage.removeItem("circleWins");
   localStorage.removeItem("crossWins");
   localStorage.removeItem("draws");
 
-  gameOver = false; // Reset the gameOver flag
+  gameOver = false;
+  document.getElementById("previous").disabled = false;
+  document.getElementById("next").disabled = false;
 }
 
 function createBoard() {
@@ -122,8 +134,6 @@ function createBoard() {
   });
 }
 
-createBoard();
-
 function addGo(e) {
   if (infoDisplay.textContent.includes("Wins!") || gameOver) {
     return;
@@ -138,7 +148,6 @@ function addGo(e) {
     go: go
   };
 
-  // Remove moves from the moveIndex onwards, as a new move is being made
   if (moveIndex < moveHistory.length - 1) {
     moveHistory.splice(moveIndex + 1);
   }
@@ -152,10 +161,6 @@ function addGo(e) {
   localStorage.setItem("crossWins", crossWins);
   localStorage.setItem("draws", draws);
 }
-
-document.getElementById("next").addEventListener("click", next);
-document.getElementById("previous").addEventListener("click", previous);
-document.getElementById("reset").addEventListener("click", reset);
 
 function checkScore() {
   const allSquares = document.querySelectorAll(".square");
@@ -211,12 +216,15 @@ function checkScore() {
 
     allSquares.forEach(square => square.removeEventListener("click", addGo));
 
-    gameOver = true; // Set gameOver flag to true
-    allSquares.forEach(square => square.removeEventListener("click", addGo));
+    gameOver = true;
+    document.getElementById("previous").disabled = true;
+    document.getElementById("next").disabled = true;
 
   } else if (isDraw()) {
     infoDisplay.textContent = "It's a draw!";
     draws++;
+    document.getElementById("previous").disabled = true;
+    document.getElementById("next").disabled = true;
     gameOver = true;
   }
 
@@ -246,3 +254,9 @@ function getCellCenterY(index) {
   const cellRect = cellElement.getBoundingClientRect();
   return cellRect.top + cellRect.height / 2;
 }
+
+document.getElementById("next").addEventListener("click", next);
+document.getElementById("previous").addEventListener("click", previous);
+document.getElementById("reset").addEventListener("click", reset);
+
+createBoard();
