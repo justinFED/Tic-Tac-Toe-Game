@@ -10,7 +10,7 @@ let draws = 0;
 let go = "circle";
 let moveIndex = -1;
 const moveHistory = [];
-let gameOver = false; 
+let gameOver = false;
 infoDisplay.textContent = "Circle Goes First";
 infoDisplay.style.color = "black";
 
@@ -25,6 +25,7 @@ if (localStorage.getItem("crossWins")) {
 if (localStorage.getItem("draws")) {
   draws = parseInt(localStorage.getItem("draws"));
 }
+
 function updateBoardFromHistory() {
   const allSquares = document.querySelectorAll(".square");
 
@@ -61,11 +62,11 @@ function next() {
   go = move.go === "circle" ? "cross" : "circle";
   infoDisplay.textContent = "It is now " + go + "'s go.";
   checkScore();
-} 
+}
 
 
 function previous() {
-  if (gameOver || moveIndex <= -1) {
+  if (moveIndex <= -1) {
     return;
   }
 
@@ -74,11 +75,10 @@ function previous() {
 }
 
 function reset() {
-
   const allSquares = document.querySelectorAll(".square");
   allSquares.forEach(square => {
     square.innerHTML = "";
-    square.addEventListener('click', addGo);
+    square.addEventListener('click', addGo); // Reattach the click event listener
   });
 
   go = "circle";
@@ -104,6 +104,8 @@ function reset() {
   localStorage.removeItem("circleWins");
   localStorage.removeItem("crossWins");
   localStorage.removeItem("draws");
+
+  gameOver = false; // Reset the gameOver flag
 }
 
 function createBoard() {
@@ -123,7 +125,7 @@ function createBoard() {
 createBoard();
 
 function addGo(e) {
-  if (infoDisplay.textContent.includes("Wins!")) {
+  if (infoDisplay.textContent.includes("Wins!") || gameOver) {
     return;
   }
 
@@ -135,6 +137,12 @@ function addGo(e) {
     cellIndex: e.target.id,
     go: go
   };
+
+  // Remove moves from the moveIndex onwards, as a new move is being made
+  if (moveIndex < moveHistory.length - 1) {
+    moveHistory.splice(moveIndex + 1);
+  }
+
   moveHistory.push(move);
   moveIndex++;
   updateBoardFromHistory();
